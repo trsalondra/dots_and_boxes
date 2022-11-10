@@ -1,101 +1,168 @@
+var canvas = document.querySelector('canvas')
 
-var boardHeight = innerHeight
-var boardWidth = innerHeight
+canvas.width = 1150
+canvas.height = innerHeight
 
-var layer2 = document.querySelector('#c2')
+var c = canvas.getContext('2d')
 
-layer2.width = innerWidth
-layer2.height = innerHeight
-
-
-var c2 = layer2.getContext('2d')
-
-class Dot {
-    constructor(x, y, radius) {
-        this.x = x
-        this.y = y
-        this.radius = radius
+class Player {
+    constructor({ position, velocity }) {
+        this.position = position
+        this.velocity = velocity
     }
 
     draw() {
-        c2.beginPath()
-        c2.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-        c2.lineWidth = 3
-        c2.strokeStyle = 'black'
-        c2.fillStyle = 'white'
-        c2.fill()
-        c2.stroke()
+        c.beginPath()
+        //right side
+        c.moveTo(this.position.x, this.position.y)
+        c.lineTo(this.position.x + 20, this.position.y + 20)
+        c.lineTo(this.position.x + 10, this.position.y + 20)
+        c.lineTo(this.position.x + 10, this.position.y + 40)
+        c.lineTo(this.position.x + 30, this.position.y + 60)
+        c.lineTo(this.position.x + 18, this.position.y + 60)
+        c.lineTo(this.position.x + 18, this.position.y + 70)
+        c.lineTo(this.position.x + 10, this.position.y + 70)
+        c.lineTo(this.position.x + 10, this.position.y + 60)
+        c.lineTo(this.position.x, this.position.y + 60)
+        //left side
+        c.moveTo(this.position.x, this.position.y)
+        c.lineTo(this.position.x - 20, this.position.y + 20)
+        c.lineTo(this.position.x - 10, this.position.y + 20)
+        c.lineTo(this.position.x - 10, this.position.y + 40)
+        c.lineTo(this.position.x - 30, this.position.y + 60)
+        c.lineTo(this.position.x - 18, this.position.y + 60)
+        c.lineTo(this.position.x - 18, this.position.y + 70)
+        c.lineTo(this.position.x - 10, this.position.y + 70)
+        c.lineTo(this.position.x - 10, this.position.y + 60)
+        c.lineTo(this.position.x, this.position.y + 60)
+        c.strokeStyle = 'white'
+        c.stroke()
+    }
+
+    update() { // each frame of animation
+        this.draw()
+        this.position.y += this.velocity.y
     }
 }
 
-var dotsArr = []
+const player1 = new Player({
+    position: {
+        x: (canvas.width / 4) * 1,
+        y: (canvas.height / 10) * 9
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    }
+})
+player1.draw()
 
-function dotGrid(rows, columns) {
-    for (let k = 0; k < rows; k++) {
-        var y = 250 + (130 * k)
-        for (let j = 0; j < columns; j++) {
-            var x = 250 + (130 * j)
-            dotsArr.push(new Dot(x, y, 20))
-        }
+const player2 = new Player({
+    position: {
+        x: (canvas.width / 4) * 3,
+        y: (canvas.height / 10) * 9
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    }
+})
+player2.draw()
+
+function animate() {
+    requestAnimationFrame(animate)
+    c.clearRect(0, 0, canvas.width, canvas.height)
+    player1.update()
+}
+
+// animate()
+
+addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case 'ArrowUp':
+            player1.velocity.y = -2
+            break
+        case 'ArrowDown':
+            player1.velocity.y = 2
+            break
+    }
+})
+
+addEventListener('keyup', (event) => {
+    switch (event.key) {
+        case 'ArrowUp':
+            player1.velocity.y = 0
+            break
+        case 'ArrowDown':
+            player1.velocity.y = 0
+            break
+    }
+})
+
+// astroids
+
+class Circle {
+    constructor({ position, velocity }) {
+        this.position = position
+        this.velocity = velocity
+        this.radius = 5
+    }
+
+    draw() {
+        c.beginPath()
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        c.strokeStyle = 'white'
+        c.stroke()
+    }
+
+    update() { // each frame of animation
+        this.draw()
+        this.position.x += this.velocity.x
     }
 }
 
-dotGrid(5, 6)
-console.log(dotsArr)
-console.log(dotsArr[0])
-console.log(dotsArr[29])
+const astroid = new Circle({
+    position: {
+        x: 500,
+        y: 500,
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    }
+})
 
-function drawDots(arr) {
-    for (let i = 0; i < arr.length; i++) {
-        arr[i].draw()
+let astroids = []
+
+function createAstroids(num) {
+    astroids = []
+
+    for (let i = 0; i < num; i++) {
+
+        astroids.push(new Circle({
+            position: {
+                x: getRandomArbitrary(4, canvas.width - 4),
+                y: getRandomArbitrary(4, ((canvas.height / 10) * 9) + 10)
+            },
+            velocity: {
+                x: 0,
+                y: 0
+            }
+        }))
     }
 }
 
-drawDots(dotsArr)
+createAstroids(18)
 
-//////////////////////////////////////////////////////////////////////////
+console.log(astroids)
+console.log(astroids.length)
 
-var layer1 = document.querySelector('#c1')
+for(let i = 0; i < astroids.length; i++) {
+    astroids[i].draw()
+}
 
-layer1.width = innerWidth
-layer1.height = innerHeight
-
-var c1 = layer1.getContext('2d')
-
-function roundedRect(c, x, y, width, height, radius) {
-    // ctx.beginPath()
-    c.moveTo(x, y + radius)
-    c.arcTo(x, y + height, x + radius, y + height, radius)
-    c.arcTo(x + width, y + height, x + width, y + height - radius, radius)
-    c.arcTo(x + width, y, x + width - radius, y, radius)
-    c.arcTo(x, y, x, y + radius, radius)
-    c.stroke()
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
 }
 
 
-
-c1.beginPath();
-c1.lineWidth = 3
-c1.strokeStyle = 'red'
-c1.fill()
-roundedRect(c1, 150, 150, 850, 720, 20)
-
-function dotToDot(c, dot1, dot2) {
-    c.beginPath();
-    c.lineWidth = 3
-    c.strokeStyle = 'green'
-    c.fill()
-    c.moveTo(dot1.x, dot1.y)
-    c.lineTo(dot2.x, dot2.y)
-    c.stroke();
-}
-
-//horizontal lines
-for (let i = 0; i < 6; i++) {
-    dotToDot(c1, dotsArr[i], dotsArr[i + 24])
-}
-
-// vertical lines
-for (let i = 0; i < 6; i++) {
-    dotToDot(c1, dotsArr[i * 6], dotsArr[(i * 6) + 5])
-}
