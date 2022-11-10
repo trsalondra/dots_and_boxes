@@ -1,140 +1,101 @@
-var canvas = document.querySelector('canvas')
 
-canvas.width = window.innerWidth
-canvas.height = window.innerWidth
+var boardHeight = innerHeight
+var boardWidth = innerHeight
+
+var layer2 = document.querySelector('#c2')
+
+layer2.width = innerWidth
+layer2.height = innerHeight
 
 
-var c = canvas.getContext('2d')
+var c2 = layer2.getContext('2d')
 
-// c.fillStyle = 'rgba(0, 255, 0, 0.3)'
-// c.fillRect(100, 100, 300, 200)
-// c.fillStyle = 'rgba(255, 0, 0, 0.3)'
-// c.fillRect(500, 500, 100, 200)
-// c.fillStyle = 'rgba(0, 0, 255, 0.3)'
-// c.fillRect(800, 800, 300, 200)
-
-// line 
-// c.beginPath()
-// c.moveTo(500, 100)
-// c.lineTo(500, 300)
-// c.lineTo(400, 300)
-// c.strokeStyle = 'green'
-// c.stroke()
-
-// arc / circle
-// c.beginPath()
-// c.arc(1000, 500, 300, 0, Math.PI * 2, false)
-// c.strokeStyle = 'blue'
-// c.stroke()
-
-// for (let i = 0; i < 3; i++) {
-// let x = Math.random() * window.innerWidth
-// let y = Math.random() * window.innerHeight
-//     c.beginPath()
-//     c.arc(x, y, 100, 0, Math.PI * 2, false)
-//     c.strokeStyle = 'blue'
-//     c.stroke()
-// }
-
-var mouse = {
-    x: undefined,
-    y: undefined
-}
-
-var maxRadius = 40
-var minRadius = 2
-
-var colorArr = [
-    '#F2637E',
-    '#F20CCC',
-    '#0476D9',
-    '#F2E30F',
-    '#F2CC0C'
-]
-
-window.addEventListener('mouseover',
-    function (event) {
-        mouse.x = event.x
-        mouse.y = event.y
-        console.log(mouse)
-    })
-
-window.addEventListener('resize', function () {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerWidth
-})
-
-class Circle {
-    constructor(x, y, dx, dy, radius) {
+class Dot {
+    constructor(x, y, radius) {
         this.x = x
         this.y = y
-        this.dx = dx
-        this.dy = dy
         this.radius = radius
-        this.minRadius = radius
-        this.color = colorArr[Math.floor(Math.random() * colorArr.length) + 1]
     }
 
     draw() {
-        c.beginPath()
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-        c.strokeStyle = 'rgba(0, 0, 0, 0)'
-        c.fill()
-        c.fillStyle = this.color
-        c.stroke()
-    }
-
-    update() {
-        if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
-            this.dx = -this.dx
-        }
-
-        if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
-            this.dy = -this.dy
-        }
-
-        this.x += this.dx
-        this.y += this.dy
-
-        //interactivity
-        if (mouse.x - this.x < 50 && mouse.x - this.x > -50 && mouse.y - this.y < 50 && mouse.y - this.y > -50) {
-            if (this.radius < maxRadius) {
-                this.radius++
-            }
-        } else if (this.radius > 2) {
-            if (this.radius < this.minRadius) {
-                this.radius--
-            }
-        }
-        this.draw()
+        c2.beginPath()
+        c2.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+        c2.lineWidth = 3
+        c2.strokeStyle = 'black'
+        c2.fillStyle = 'white'
+        c2.fill()
+        c2.stroke()
     }
 }
 
-let circleArr = []
+var dotsArr = []
 
-function init() {
-
-    circleArr = []
-    for (let i = 0; i < 50; i++) {
-        var x = ((Math.random() * innerWidth) - radius * 2) + radius
-        var y = ((Math.random() * innerHeight) - radius * 2) + radius
-        var dx = ((Math.random() - 0.5) * 2)
-        var dy = ((Math.random() - 0.5) * 2)
-        var radius = Math.floor(Math.random() * 3) + 1
-
-        circleArr.push(new Circle(x, y, dx, dy, radius))
+function dotGrid(rows, columns) {
+    for (let k = 0; k < rows; k++) {
+        var y = 250 + (130 * k)
+        for (let j = 0; j < columns; j++) {
+            var x = 250 + (130 * j)
+            dotsArr.push(new Dot(x, y, 20))
+        }
     }
 }
 
-init()
+dotGrid(5, 6)
+console.log(dotsArr)
+console.log(dotsArr[0])
+console.log(dotsArr[29])
 
-function animate() {
-    requestAnimationFrame(animate)
-    c.clearRect(0, 0, innerWidth, innerHeight)
-
-    for (let i = 0; i < circleArr.length; i++) {
-        circleArr[i].update()
+function drawDots(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        arr[i].draw()
     }
 }
 
-animate()
+drawDots(dotsArr)
+
+//////////////////////////////////////////////////////////////////////////
+
+var layer1 = document.querySelector('#c1')
+
+layer1.width = innerWidth
+layer1.height = innerHeight
+
+var c1 = layer1.getContext('2d')
+
+function roundedRect(c, x, y, width, height, radius) {
+    // ctx.beginPath()
+    c.moveTo(x, y + radius)
+    c.arcTo(x, y + height, x + radius, y + height, radius)
+    c.arcTo(x + width, y + height, x + width, y + height - radius, radius)
+    c.arcTo(x + width, y, x + width - radius, y, radius)
+    c.arcTo(x, y, x, y + radius, radius)
+    c.stroke()
+}
+
+
+
+c1.beginPath();
+c1.lineWidth = 3
+c1.strokeStyle = 'red'
+c1.fill()
+roundedRect(c1, 150, 150, 850, 720, 20)
+
+function dotToDot(c, dot1, dot2) {
+    c.beginPath();
+    c.lineWidth = 3
+    c.strokeStyle = 'green'
+    c.fill()
+    c.moveTo(dot1.x, dot1.y)
+    c.lineTo(dot2.x, dot2.y)
+    c.stroke();
+}
+
+//horizontal lines
+for (let i = 0; i < 6; i++) {
+    dotToDot(c1, dotsArr[i], dotsArr[i + 24])
+}
+
+// vertical lines
+for (let i = 0; i < 6; i++) {
+    dotToDot(c1, dotsArr[i * 6], dotsArr[(i * 6) + 5])
+}
