@@ -1,45 +1,58 @@
-// create canvas 
-var canvas = document.querySelector('canvas')
 
-canvas.height = outerHeight
+let isRunning = false
+let isDone = false
+
+//////////////////////////////////////////////CANVAS
+let canvas = document.querySelector('canvas')
+
+canvas.height = innerHeight
 canvas.width = canvas.height * (4 / 3)
 
-var c = canvas.getContext('2d')
+let c = canvas.getContext('2d')
 
-var hasStarted = false
+// to-do add resize
 
-// to-do add resize 
-
-// line class
+//////////////////////////////////////////////LINE
 class Line {
-    constructor({ startPosition, endPosition, velocity }) {
+    constructor({ color, startPosition, endPosition, velocity }) {
+        this.color = color
         this.startPosition = startPosition
         this.endPosition = endPosition
         this.velocity = velocity
+        this.initPositionY = this.endPosition.y
+        this.initVelocityY = this.velocity.y
     }
 
     draw() {
         c.beginPath
         c.moveTo(this.startPosition.x, this.startPosition.y)
         c.lineTo(this.endPosition.x, this.endPosition.y)
-        c.strokeStyle = 'white'
+        c.strokeStyle = this.color
         c.stroke()
     }
 
     update() {
         this.draw()
-
-        if (hasStarted) {
+        if (isRunning) {
             this.endPosition.y += this.velocity.y
-            console.log(this.endPosition.y )
-            if (this.startPosition.y < this.endPosition.y) {
-                this.endPosition.y = this.startPosition.y
+            if (this.startPosition.y <= this.endPosition.y) {
+                this.velocity.y = 0
+                isRunning = false
+                isDone = true
             }
         }
     }
+
+    reset() {
+        this.endPosition.y = this.initPositionY
+        this.velocity.y = this.initVelocityY
+    }
 }
 
-const centerLine = new Line({
+
+// draw line
+var centerLine = new Line({
+    color: 'white',
     startPosition: {
         x: canvas.width * .50,
         y: canvas.height * .9
@@ -56,19 +69,18 @@ const centerLine = new Line({
 
 centerLine.draw()
 
-//get start button
-var startBtn = document.querySelector('#startBtn')
-
-startBtn.addEventListener('click', () => {
-    console.log('pressed')
-    hasStarted = true
-})
-
-// player class
+//////////////////////////////////////////////PLAYERS
 class Player {
-    constructor({ position, velocity }) {
+    constructor({ name, color, position, velocity }) {
+        this.name = name
         this.position = position
         this.velocity = velocity
+        this.color = color
+        this.top = this.position.y
+        this.bottom = this.position.y + 70
+        this.left = this.position.x - 30
+        this.right = this.position.x + 30
+        this.score = 0
     }
 
     draw() {
@@ -83,30 +95,39 @@ class Player {
         c.lineTo(this.position.x + 18, this.position.y + 70)
         c.lineTo(this.position.x + 10, this.position.y + 70)
         c.lineTo(this.position.x + 10, this.position.y + 60)
-        c.lineTo(this.position.x, this.position.y + 60)
-        //left side
-        c.moveTo(this.position.x, this.position.y)
-        c.lineTo(this.position.x - 20, this.position.y + 20)
-        c.lineTo(this.position.x - 10, this.position.y + 20)
-        c.lineTo(this.position.x - 10, this.position.y + 40)
-        c.lineTo(this.position.x - 30, this.position.y + 60)
-        c.lineTo(this.position.x - 18, this.position.y + 60)
-        c.lineTo(this.position.x - 18, this.position.y + 70)
-        c.lineTo(this.position.x - 10, this.position.y + 70)
         c.lineTo(this.position.x - 10, this.position.y + 60)
-        c.lineTo(this.position.x, this.position.y + 60)
-        c.strokeStyle = 'white'
+        c.lineTo(this.position.x - 10, this.position.y + 70)
+        c.lineTo(this.position.x - 18, this.position.y + 70)
+        c.lineTo(this.position.x - 18, this.position.y + 60)
+        c.lineTo(this.position.x - 30, this.position.y + 60)
+        c.lineTo(this.position.x - 10, this.position.y + 40)
+        c.lineTo(this.position.x - 10, this.position.y + 20)
+        c.lineTo(this.position.x - 20, this.position.y + 20)
+        c.closePath()
+        // c.fillStyle = this.color 
+        // c.fill()      
+        c.strokeStyle = this.color
         c.stroke()
     }
 
     update() { // each frame of animation
         this.draw()
-        this.position.y += this.velocity.y
+        if (isRunning) {
+            
+            this.position.y += this.velocity.y
+            this.top = this.position.y + this.velocity.y
+            this.bottom = this.position.y + 70 + this.velocity.y
+            this.left = this.position.x - 30
+            this.right = this.position.x + 30
+        }
+
     }
 }
 
 // draw players
-const player1 = new Player({
+var player1 = new Player({
+    name: 'Player 1',
+    color: 'white',
     position: {
         x: canvas.width * .25,
         y: canvas.height * .90
@@ -117,9 +138,9 @@ const player1 = new Player({
     }
 })
 
-player1.draw()
-
-const player2 = new Player({
+var player2 = new Player({
+    name: 'Player 2',
+    color: 'white',
     position: {
         x: canvas.width * .75,
         y: canvas.height * .90
@@ -130,60 +151,35 @@ const player2 = new Player({
     }
 })
 
+player1.draw()
+
 player2.draw()
 
-var score = 0
-// player event listeners
-addEventListener('keydown', (event) => {
-    switch (event.key) {
-        case 'ArrowUp':
-            player1.velocity.y = -2
-            console.log(player1.position.y)
-            break
-        case 'ArrowDown':
-            player1.velocity.y = 2
-            console.log(player1.position.y)
-            break
-    }
+c.font = '148px courier new'
+c.fillStyle = 'white'
+c.fillText(`${player1.score}`, canvas.width * .089, canvas.height * .90 + 70)
 
-    if (player1.position.y < 0) {
-        score++
-        player1.position.y = canvas.height * .90
-        console.log(`Score: ${score}`)
-    }
+c.font = "148px courier new"
+c.fillText(`${player2.score}`, canvas.width * .844, canvas.height * .90 + 70)
 
-    if (player1.position.y > canvas.height) {
-        player1.velocity.y = 0
-        player1.position.y = canvas.height * .90 + 70
-        console.log('bottom')
-    }
-})
-
-addEventListener('keyup', (event) => {
-    switch (event.key) {
-        case 'ArrowUp':
-            player1.velocity.y = 0
-            break
-        case 'ArrowDown':
-            player1.velocity.y = 0
-            break
-    }
-})
-
-// astroid class
-let astroidRadius = 3;
-
-class Circle {
-    constructor({ position, velocity, radius, color }) {
+//////////////////////////////////////////////ASTROIDS
+class Astroid {
+    constructor({ color, position, velocity, radius }) {
         this.position = position
         this.velocity = velocity
         this.color = color
         this.radius = radius
+        this.top = this.position.y - this.radius
+        this.bottom = this.position.y + this.radius
+        this.left = this.position.x - this.radius
+        this.right = this.position.x + this.radius
     }
 
     draw() {
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        // c.fillStyle = this.color
+        // c.fill()
         c.strokeStyle = this.color
         c.stroke()
     }
@@ -191,29 +187,36 @@ class Circle {
     rightUpdate() { // each frame of animation
         this.draw()
         if (this.position.x + this.velocity.x > canvas.width) {
-            this.position.x = 0
+            this.position.x = 0 // maybe add more
         } else {
             this.position.x += this.velocity.x
+            this.left = this.position.x - this.radius + this.velocity.x
+            this.right = this.position.x + this.radius + this.velocity.x
         }
     }
 
     leftUpdate() { // each frame of animation
         this.draw()
         if (this.position.x - this.velocity.x < 0) {
-            this.position.x = canvas.width
+            this.position.x = canvas.width // maybe add more
         } else {
             this.position.x -= this.velocity.x
+            this.left = this.position.x - this.radius - this.velocity.x
+            this.right = this.position.x + this.radius - this.velocity.x
         }
     }
 }
 
 // draw astroids
+let astroidRadius = 3
+
 function createAstroids({ arr, num }) {
     for (let i = 0; i < num; i++) {
-        arr.push(new Circle({
+        arr.push(new Astroid({
+            color: 'white',
             position: {
                 x: getRandomArbitrary(astroidRadius, canvas.width - astroidRadius),
-                y: getRandomArbitrary(astroidRadius, (canvas.height / 10) * 8)
+                y: getRandomArbitrary(astroidRadius, canvas.height * .80)
             },
             velocity: {
                 x: 2,
@@ -225,42 +228,146 @@ function createAstroids({ arr, num }) {
     }
 }
 
-var rightAstroids = []
+let rightAstroids = []
+
+let leftAstroids = []
 
 createAstroids({ arr: rightAstroids, num: 18 })
 
-var leftAstroids = []
-
 createAstroids({ arr: leftAstroids, num: 18 })
 
+c.fillStyle = 'white'
+c.font = '148px courier new'
+c.fillText(`${player1.score}`, canvas.width * .089, canvas.height * .90 + 70)
 
+c.font = "148px courier new"
+c.fillText(`${player2.score}`, canvas.width * .844, canvas.height * .90 + 70)
 
-// animate
+//////////////////////////////////////////////PAGEs
+
+//get start button
+let playBtn = document.querySelector('#playBtn')
+
+let endGamePg = document.querySelector('.endGamePg')
+
+let playAgainBtn = document.querySelector('#playAgainBtn')
+
+playBtn.onclick = function () {
+    isRunning = true
+    playBtn.style.display = 'none'
+
+    animate()
+}
+
+playAgainBtn.onclick = function () {
+    isDone = false
+    isRunning = true
+    centerLine.reset()
+    player1.score = 0
+    player2.score = 0
+}
+
+//////////////////////////////////////////////ANIMATION
+let currentPlayer = player1
+
+// player event listeners
+addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case 'k':
+            currentPlayer.velocity.y = -2
+            break
+        case 'm':
+            currentPlayer.velocity.y = 2
+            break
+    }
+
+    if (currentPlayer.position.y < 0) {
+        currentPlayer.score++
+        currentPlayer.position.y = canvas.height * .90
+        console.log(`${currentPlayer.name} Score: ${currentPlayer.score}`)
+    }
+
+    if (currentPlayer.position.y + currentPlayer.velocity.y > canvas.height * .90) {
+        currentPlayer.velocity.y = 0
+        currentPlayer.position.y = canvas.height * .90
+    }
+})
+
+addEventListener('keyup', (event) => {
+    switch (event.key) {
+        case 'k':
+            currentPlayer.velocity.y = 0
+            break
+        case 'm':
+            currentPlayer.velocity.y = 0
+            break
+    }
+})
+
 function animate() {
-    requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
-
-    // animate players
-    player1.update()
+    requestAnimationFrame(animate)
 
     // animate right moving astroids
     for (let i = 0; i < rightAstroids.length; i++) {
         rightAstroids[i].rightUpdate()
+
+        if (rightAstroids[i].right > currentPlayer.left && rightAstroids[i].left < currentPlayer.right && rightAstroids[i].bottom > currentPlayer.top && rightAstroids[i].top < currentPlayer.bottom) {
+            console.log('touch')
+            currentPlayer.velocity.y = 0
+            currentPlayer.position.y = canvas.height * .90
+
+            if (currentPlayer === player1) {
+                currentPlayer = player2
+            } else {
+                currentPlayer = player1
+            }
+        }
     }
 
     // animate left moving astroids
     for (let i = 0; i < leftAstroids.length; i++) {
         leftAstroids[i].leftUpdate()
+
+        if (leftAstroids[i].right > currentPlayer.left && leftAstroids[i].left < currentPlayer.right && leftAstroids[i].bottom > currentPlayer.top && leftAstroids[i].top < currentPlayer.bottom) {
+            console.log('touch')
+            currentPlayer.velocity.y = 0
+            currentPlayer.position.y = canvas.height * .90
+
+            if (currentPlayer === player1) {
+                currentPlayer = player2
+            } else {
+                currentPlayer = player1
+            }
+        }
     }
 
     centerLine.update()
 
+    // animate players
+    player1.update()
 
+    player2.update()
+
+    c.font = '148px courier new'
+    c.fillStyle = 'white'
+    c.fillText(`${player1.score}`, canvas.width * .089, canvas.height * .90 + 70)
+
+    c.font = "148px courier new"
+    c.fillText(`${player2.score}`, canvas.width * .844, canvas.height * .90 + 70)
+
+    if (isDone) {
+        endGamePg.style.display = 'flex'
+    }
+
+    if (isRunning) {
+        endGamePg.style.display = 'none'
+    }
 }
 
-animate()
-
-// extra functions
+//////////////////////////////////////////////EXTRA FUNCTION
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+
