@@ -1,4 +1,3 @@
-
 let isRunning = false
 let isDone = false
 
@@ -9,8 +8,6 @@ canvas.height = innerHeight
 canvas.width = canvas.height * (4 / 3)
 
 let c = canvas.getContext('2d')
-
-// to-do add resize
 
 //////////////////////////////////////////////LINE
 class Line {
@@ -49,9 +46,8 @@ class Line {
     }
 }
 
-
 // draw line
-var centerLine = new Line({
+let centerLine = new Line({
     color: 'white',
     startPosition: {
         x: canvas.width * .50,
@@ -63,7 +59,7 @@ var centerLine = new Line({
     },
     velocity: {
         x: 0,
-        y: 1
+        y: .125
     }
 })
 
@@ -125,7 +121,7 @@ class Player {
 }
 
 // draw players
-var player1 = new Player({
+let player1 = new Player({
     name: 'Player 1',
     color: 'white',
     position: {
@@ -138,7 +134,7 @@ var player1 = new Player({
     }
 })
 
-var player2 = new Player({
+let player2 = new Player({
     name: 'Player 2',
     color: 'white',
     position: {
@@ -313,7 +309,6 @@ function animate() {
         rightAstroids[i].rightUpdate()
 
         if (rightAstroids[i].right > currentPlayer.left && rightAstroids[i].left < currentPlayer.right && rightAstroids[i].bottom > currentPlayer.top && rightAstroids[i].top < currentPlayer.bottom) {
-            console.log('touch')
             currentPlayer.velocity.y = 0
             currentPlayer.position.y = canvas.height * .90
 
@@ -330,7 +325,6 @@ function animate() {
         leftAstroids[i].leftUpdate()
 
         if (leftAstroids[i].right > currentPlayer.left && leftAstroids[i].left < currentPlayer.right && leftAstroids[i].bottom > currentPlayer.top && leftAstroids[i].top < currentPlayer.bottom) {
-            console.log('touch')
             currentPlayer.velocity.y = 0
             currentPlayer.position.y = canvas.height * .90
 
