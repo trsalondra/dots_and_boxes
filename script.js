@@ -9,6 +9,52 @@ canvas.width = canvas.height * (4 / 3)
 
 let c = canvas.getContext('2d')
 
+//get start button
+let playBtn = document.querySelector('#playBtn')
+
+let endGamePg = document.querySelector('.endGamePg')
+
+endGamePg.style.height = `${canvas.height}px`
+endGamePg.style.width = `${canvas.width}px`
+
+let playAgainBtn = document.querySelector('#playAgainBtn')
+
+let helpBtn = document.querySelector('#helpBtn')
+
+let helpPg = document.querySelector('.helpPg')
+
+helpPg.style.height = `${canvas.height}px`
+helpPg.style.width = `${canvas.width}px`
+
+let closeHelp = document.querySelector("#closeHelp")
+
+let BtnContainer = document.querySelector('.BtnContainer')
+
+closeHelp.onclick = function () {
+    helpPg.style.display = 'none'
+    BtnContainer.style.display = 'flex'
+}
+
+helpBtn.onclick = function () {
+    helpPg.style.display = 'flex'
+    BtnContainer.style.display = 'none'
+}
+
+playBtn.onclick = function () {
+    isRunning = true
+    BtnContainer.style.display = 'none'
+    animate()
+}
+
+playAgainBtn.onclick = function () {
+    isDone = false
+    isRunning = true
+    centerLine.reset()
+    player1.score = 0
+    player2.score = 0
+}
+
+
 //////////////////////////////////////////////LINE
 class Line {
     constructor({ color, startPosition, endPosition, velocity }) {
@@ -18,7 +64,7 @@ class Line {
         this.velocity = velocity
         this.initPositionY = this.endPosition.y
         this.initVelocityY = this.velocity.y
-    }
+    } 
 
     draw() {
         c.beginPath
@@ -63,7 +109,6 @@ let centerLine = new Line({
     }
 })
 
-centerLine.draw()
 
 //////////////////////////////////////////////PLAYERS
 class Player {
@@ -151,13 +196,6 @@ player1.draw()
 
 player2.draw()
 
-c.font = '148px courier new'
-c.fillStyle = 'white'
-c.fillText(`${player1.score}`, canvas.width * .089, canvas.height * .90 + 70)
-
-c.font = "148px courier new"
-c.fillText(`${player2.score}`, canvas.width * .844, canvas.height * .90 + 70)
-
 //////////////////////////////////////////////ASTROIDS
 class Astroid {
     constructor({ color, position, velocity, radius }) {
@@ -232,36 +270,9 @@ createAstroids({ arr: rightAstroids, num: 18 })
 
 createAstroids({ arr: leftAstroids, num: 18 })
 
-c.fillStyle = 'white'
-c.font = '148px courier new'
-c.fillText(`${player1.score}`, canvas.width * .089, canvas.height * .90 + 70)
-
-c.font = "148px courier new"
-c.fillText(`${player2.score}`, canvas.width * .844, canvas.height * .90 + 70)
-
 //////////////////////////////////////////////PAGEs
 
-//get start button
-let playBtn = document.querySelector('#playBtn')
 
-let endGamePg = document.querySelector('.endGamePg')
-
-let playAgainBtn = document.querySelector('#playAgainBtn')
-
-playBtn.onclick = function () {
-    isRunning = true
-    playBtn.style.display = 'none'
-
-    animate()
-}
-
-playAgainBtn.onclick = function () {
-    isDone = false
-    isRunning = true
-    centerLine.reset()
-    player1.score = 0
-    player2.score = 0
-}
 
 //////////////////////////////////////////////ANIMATION
 let currentPlayer = player1
