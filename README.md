@@ -97,4 +97,4 @@ Chris Courses YouTube Videos:
 
 ## Acknowledgements
 I would like to thank my instructors Tishana Trainer and Kasper Kain for their guidance.  
-I would also like to thanks my friend Oriana Cruz for her suggestions and motivation.
+I would also like to thank my friend Oriana Cruz for her suggestions and motivation.
