@@ -60,7 +60,7 @@ Here are a couple of Screenshots of how the final project looks like:
 
 ## Installation Instructions
 1. **Clone or fork the repository**
->using your terminal copy the following code:
+using your terminal copy the following code:
 > `git clone git@github.com:trsalondra/space_race.git`
 
 2. **Using Visual Studio Code, launch the index.html with the Live Server extension**
