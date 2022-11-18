@@ -25,9 +25,7 @@ button {
     display: block;
     padding: 16px 32px;
     text-align: center;
-
     cursor: pointer;
-
     color: white;
     border-radius: 50px;
     border-color: white;
@@ -67,12 +65,19 @@ button {
 
 #closeHelp {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     right: 10px;
     top: 10px;
     color: #aaaaaa;
     font-size: 28px;
     font-weight: bold;
     overflow: auto;
+    width: 40px;
+    height: 40px;
+    border-style: solid;
+    border-radius: 50%;
     border-color: white;
 }
 
