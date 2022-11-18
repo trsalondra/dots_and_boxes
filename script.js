@@ -3,9 +3,9 @@ let isDone = false
 let player1Color = 'white'
 let player2Color = 'white'
 let centerLineColor = 'white'
-let astroidRadius = 3
-let astroidColor = 'white'
-let astroidNum = 36
+let asteroidRadius = 3
+let asteroidColor = 'white'
+let asteroidNum = 36
 let upKey = 'k'
 let downKey = 'm'
 let canvasColor = 'purple'
@@ -246,8 +246,8 @@ player2.draw()
 
 let currentPlayer = player1
 
-//////////////////////////////////////////////ASTROIDS
-class Astroid {
+//////////////////////////////////////////////ASTEROIDS
+class Asteroid {
     constructor({ color, position, velocity, radius }) {
         this.position = position
         this.velocity = velocity
@@ -289,29 +289,29 @@ class Astroid {
     }
 }
 
-// draw astroids
-function createAstroids({ arr, num }) {
+// draw asteroids
+function createAsteroids({ arr, num }) {
     for (let i = 0; i < num; i++) {
-        arr.push(new Astroid({
-            color: astroidColor,
+        arr.push(new Asteroid({
+            color: asteroidColor,
             position: {
-                x: getRandomArbitrary(astroidRadius, canvas.width - astroidRadius),
-                y: getRandomArbitrary(astroidRadius, canvas.height * .80)
+                x: getRandomArbitrary(asteroidRadius, canvas.width - asteroidRadius),
+                y: getRandomArbitrary(asteroidRadius, canvas.height * .80)
             },
             velocity: {
                 x: 2,
                 y: 0
             },
-            radius: astroidRadius
+            radius: asteroidRadius
         }))
     }
 }
 
-let rightAstroids = []
-let leftAstroids = []
+let rightAsteroids = []
+let leftAsteroids = []
 
-createAstroids({ arr: rightAstroids, num: astroidNum / 2 })
-createAstroids({ arr: leftAstroids, num: astroidNum / 2 })
+createAsteroids({ arr: rightAsteroids, num: asteroidNum / 2 })
+createAsteroids({ arr: leftAsteroids, num: asteroidNum / 2 })
 
 //////////////////////////////////////////////EVENT LISTENERS
 addEventListener('keydown', (event) => {
@@ -360,11 +360,11 @@ function animate() {
 
     player2.update()
 
-    // animate right moving astroids
-    for (let i = 0; i < rightAstroids.length; i++) {
-        rightAstroids[i].rightUpdate()
+    // animate right moving asteroids
+    for (let i = 0; i < rightAsteroids.length; i++) {
+        rightAsteroids[i].rightUpdate()
 
-        if (rightAstroids[i].right > currentPlayer.left && rightAstroids[i].left < currentPlayer.right && rightAstroids[i].bottom > currentPlayer.top && rightAstroids[i].top < currentPlayer.bottom) {
+        if (rightAsteroids[i].right > currentPlayer.left && rightAsteroids[i].left < currentPlayer.right && rightAsteroids[i].bottom > currentPlayer.top && rightAsteroids[i].top < currentPlayer.bottom) {
             collisionAudio.play()
             currentPlayer.velocity.y = 0
             currentPlayer.position.y = canvas.height * .90
@@ -377,11 +377,11 @@ function animate() {
         }
     }
 
-    // animate left moving astroids
-    for (let i = 0; i < leftAstroids.length; i++) {
-        leftAstroids[i].leftUpdate()
+    // animate left moving asteroids
+    for (let i = 0; i < leftAsteroids.length; i++) {
+        leftAsteroids[i].leftUpdate()
 
-        if (leftAstroids[i].right > currentPlayer.left && leftAstroids[i].left < currentPlayer.right && leftAstroids[i].bottom > currentPlayer.top && leftAstroids[i].top < currentPlayer.bottom) {
+        if (leftAsteroids[i].right > currentPlayer.left && leftAsteroids[i].left < currentPlayer.right && leftAsteroids[i].bottom > currentPlayer.top && leftAsteroids[i].top < currentPlayer.bottom) {
             collisionAudio.play()
             currentPlayer.velocity.y = 0
             currentPlayer.position.y = canvas.height * .90
@@ -425,5 +425,3 @@ function animate() {
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
-
-

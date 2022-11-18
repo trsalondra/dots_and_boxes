@@ -77,7 +77,7 @@ Chris Courses YouTube Videos:
 - HTML5 Canvas Tutorial for Beginners | An Intro to Becoming a Pro - Ep. 1  
     https://www.youtube.com/watch?v=EO6OkltgudE&t=7s
 
-- Drawing On the Canvas | HTML5 Canvas Tutorial for Beginners - Ep. 2 
+- Drawing On the Canvas | HTML5 Canvas Tutorial for Beginners - Ep. 2  
     https://www.youtube.com/watch?v=83L6B13ixQ0&list=PLpPnRKq7eNW3We9VdCfx9fprhqXHwTPXL&index=2&t=19s  
 
 - Animating the Canvas | HTML5 Canvas Tutorial for Beginners - Ep. 3  
