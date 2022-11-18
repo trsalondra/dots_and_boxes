@@ -45,18 +45,8 @@ button {
     background-color: rgb(0, 99, 230);
 }
 
-.endGamePg {
-    display: none;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    z-index: 6;
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
 .helpPg {
-    flex-direction: column;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     position: absolute;
@@ -65,9 +55,21 @@ button {
  
 }
 
+.endGamePg {
+    flex-direction: column;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 6;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
 #closeHelp {
+    position: absolute;
+    right: 10px;
+    top: 10px;
     color: #aaaaaa;
-    /* float: right; */
     font-size: 28px;
     font-weight: bold;
     overflow: auto;
@@ -82,5 +84,8 @@ button {
 }
 
 .directions{
-    padding: 50px;
+    position: none;
+justify-content: center;
+align-items: center;
+    margin: 25%;
 }

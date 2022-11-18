@@ -30,6 +30,16 @@ let closeHelp = document.querySelector("#closeHelp")
 
 let BtnContainer = document.querySelector('.BtnContainer')
 
+let collisionAudio = new Audio ('./audio/collision4.wav ')
+
+let scoreAudio = new Audio('./audio/score2.wav')
+
+let gamePlayAudio = new Audio('./audio/stranger-things.mp3')
+gamePlayAudio.volume = .35
+
+let endPlayAudio = new Audio('./audio/endPlay2.mp3')
+endPlayAudio.volume = .35
+
 closeHelp.onclick = function () {
     helpPg.style.display = 'none'
     BtnContainer.style.display = 'flex'
@@ -55,6 +65,9 @@ playAgainBtn.onclick = function () {
 }
 
 
+
+
+
 //////////////////////////////////////////////LINE
 class Line {
     constructor({ color, startPosition, endPosition, velocity }) {
@@ -77,8 +90,28 @@ class Line {
     update() {
         this.draw()
         if (isRunning) {
+            if (gamePlayAudio.muted === true){
+                gamePlayAudio.muted = false
+                gamePlayAudio.currentTime = 1
+            }
+
+            if (endPlayAudio.muted === false){
+                endPlayAudio.muted = true
+            }
+
+            gamePlayAudio.play()
+
             this.endPosition.y += this.velocity.y
             if (this.startPosition.y <= this.endPosition.y) {
+                if (endPlayAudio.muted === true){
+                    endPlayAudio.muted = false
+                    endPlayAudio.currentTime = 1
+                }
+                if (gamePlayAudio.muted === false){
+                    gamePlayAudio.muted = true
+                }
+                
+                endPlayAudio.play()
                 this.velocity.y = 0
                 isRunning = false
                 isDone = true
@@ -105,7 +138,7 @@ let centerLine = new Line({
     },
     velocity: {
         x: 0,
-        y: .125
+        y: 2
     }
 })
 
@@ -289,6 +322,7 @@ addEventListener('keydown', (event) => {
     }
 
     if (currentPlayer.position.y < 0) {
+        scoreAudio.play()
         currentPlayer.score++
         currentPlayer.position.y = canvas.height * .90
         console.log(`${currentPlayer.name} Score: ${currentPlayer.score}`)
@@ -320,6 +354,7 @@ function animate() {
         rightAstroids[i].rightUpdate()
 
         if (rightAstroids[i].right > currentPlayer.left && rightAstroids[i].left < currentPlayer.right && rightAstroids[i].bottom > currentPlayer.top && rightAstroids[i].top < currentPlayer.bottom) {
+            collisionAudio.play()
             currentPlayer.velocity.y = 0
             currentPlayer.position.y = canvas.height * .90
 
@@ -336,6 +371,7 @@ function animate() {
         leftAstroids[i].leftUpdate()
 
         if (leftAstroids[i].right > currentPlayer.left && leftAstroids[i].left < currentPlayer.right && leftAstroids[i].bottom > currentPlayer.top && leftAstroids[i].top < currentPlayer.bottom) {
+            collisionAudio.play()
             currentPlayer.velocity.y = 0
             currentPlayer.position.y = canvas.height * .90
 
