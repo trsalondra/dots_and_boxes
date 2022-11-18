@@ -3,12 +3,12 @@ In this Space Race game, two players control a rocket ship. Players score points
 
 
 ## Game Functions
-When the help button is clicked:
-    - modal with directions appears
+When the help button is clicked:<br />
+    - modal with directions appears  
     - to exit the modal, click the x in the top right corner 
 
 When the play button is clicked:
-    - the game is started
+    - the game is started 
     - it becomes player1's turn
     - game music begins paying
     - center line starts shrinking

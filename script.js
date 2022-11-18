@@ -314,9 +314,6 @@ createAstroids({ arr: rightAstroids, num: astroidNum / 2 })
 createAstroids({ arr: leftAstroids, num: astroidNum / 2 })
 
 //////////////////////////////////////////////EVENT LISTENERS
-
-
-// player event listeners
 addEventListener('keydown', (event) => {
     switch (event.key) {
         case upKey:
@@ -351,7 +348,6 @@ addEventListener('keyup', (event) => {
 })
 
 //////////////////////////////////////////////ANIMATION
-
 function animate() {
     c.clearRect(0, 0, canvas.width, canvas.height)
     requestAnimationFrame(animate)
